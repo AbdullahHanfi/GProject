@@ -1,0 +1,652 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Project_DBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Contest">
+          <Key>
+            <PropertyRef Name="C_ID" />
+          </Key>
+          <Property Name="C_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Start_at" Type="smalldatetime" Nullable="false" />
+          <Property Name="End_in" Type="smalldatetime" Nullable="false" />
+          <Property Name="Admin_ID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Input_Cases">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="Problem_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="Path" Type="varchar" MaxLength="1000" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Language">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Output_Cases">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Input_ID" Type="int" Nullable="false" />
+          <Property Name="Path" Type="varchar" MaxLength="1000" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Participant">
+          <Key>
+            <PropertyRef Name="C_ID" />
+            <PropertyRef Name="User_ID" />
+          </Key>
+          <Property Name="C_ID" Type="int" Nullable="false" />
+          <Property Name="User_ID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Problem">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="P_Description" Type="varchar" MaxLength="1000" Nullable="false" />
+          <Property Name="Time_Limit" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="Memory_Limit" Type="int" Nullable="false" />
+          <Property Name="C_ID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Problem_Lang">
+          <Key>
+            <PropertyRef Name="Lang_ID" />
+            <PropertyRef Name="Problem_ID" />
+          </Key>
+          <Property Name="Lang_ID" Type="int" Nullable="false" />
+          <Property Name="Problem_ID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Roles">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="30" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Submission">
+          <Key>
+            <PropertyRef Name="Problem_ID" />
+            <PropertyRef Name="User_ID" />
+          </Key>
+          <Property Name="Problem_ID" Type="int" Nullable="false" />
+          <Property Name="User_ID" Type="int" Nullable="false" />
+          <Property Name="Text_Code" Type="varchar" MaxLength="1000" Nullable="false" />
+          <Property Name="Status" Type="tinyint" Nullable="false" />
+          <Property Name="Memory" Type="int" Nullable="false" />
+          <Property Name="Execution_Time" Type="float" Nullable="false" />
+          <Property Name="Langage_ID" Type="int" Nullable="false" />
+          <Property Name="Submission_Time" Type="smalldatetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Email" Type="varchar" MaxLength="64" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="64" Nullable="false" />
+          <Property Name="R_ID" Type="int" Nullable="false" />
+          <Property Name="UserName" Type="varchar" MaxLength="64" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="64" />
+        </EntityType>
+        <Association Name="FK_Contest_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Contest" Type="Self.Contest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Contest">
+              <PropertyRef Name="Admin_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Input_Cases_Problem">
+          <End Role="Problem" Type="Self.Problem" Multiplicity="1" />
+          <End Role="Input_Cases" Type="Self.Input_Cases" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Problem">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Input_Cases">
+              <PropertyRef Name="Problem_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Output_Cases_Input_Cases">
+          <End Role="Input_Cases" Type="Self.Input_Cases" Multiplicity="1" />
+          <End Role="Output_Cases" Type="Self.Output_Cases" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Input_Cases">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Output_Cases">
+              <PropertyRef Name="Input_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Participant_Contest">
+          <End Role="Contest" Type="Self.Contest" Multiplicity="1" />
+          <End Role="Participant" Type="Self.Participant" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Contest">
+              <PropertyRef Name="C_ID" />
+            </Principal>
+            <Dependent Role="Participant">
+              <PropertyRef Name="C_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Participant_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Participant" Type="Self.Participant" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Participant">
+              <PropertyRef Name="User_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Problem_Contest">
+          <End Role="Contest" Type="Self.Contest" Multiplicity="1" />
+          <End Role="Problem" Type="Self.Problem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Contest">
+              <PropertyRef Name="C_ID" />
+            </Principal>
+            <Dependent Role="Problem">
+              <PropertyRef Name="C_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Problem_Lang_Language">
+          <End Role="Language" Type="Self.Language" Multiplicity="1" />
+          <End Role="Problem_Lang" Type="Self.Problem_Lang" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Language">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Problem_Lang">
+              <PropertyRef Name="Lang_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Problem_Lang_Problem">
+          <End Role="Problem" Type="Self.Problem" Multiplicity="1" />
+          <End Role="Problem_Lang" Type="Self.Problem_Lang" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Problem">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Problem_Lang">
+              <PropertyRef Name="Problem_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Submission_Problem">
+          <End Role="Problem" Type="Self.Problem" Multiplicity="1" />
+          <End Role="Submission" Type="Self.Submission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Problem">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Submission">
+              <PropertyRef Name="Problem_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Submission_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Submission" Type="Self.Submission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Submission">
+              <PropertyRef Name="User_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Roles">
+          <End Role="Roles" Type="Self.Roles" Multiplicity="1" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Roles">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="R_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Project_DBModelStoreContainer">
+          <EntitySet Name="Contest" EntityType="Self.Contest" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Input_Cases" EntityType="Self.Input_Cases" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Language" EntityType="Self.Language" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Output_Cases" EntityType="Self.Output_Cases" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Participant" EntityType="Self.Participant" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Problem" EntityType="Self.Problem" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Problem_Lang" EntityType="Self.Problem_Lang" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Submission" EntityType="Self.Submission" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Contest_User" Association="Self.FK_Contest_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Contest" EntitySet="Contest" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Input_Cases_Problem" Association="Self.FK_Input_Cases_Problem">
+            <End Role="Problem" EntitySet="Problem" />
+            <End Role="Input_Cases" EntitySet="Input_Cases" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Output_Cases_Input_Cases" Association="Self.FK_Output_Cases_Input_Cases">
+            <End Role="Input_Cases" EntitySet="Input_Cases" />
+            <End Role="Output_Cases" EntitySet="Output_Cases" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Participant_Contest" Association="Self.FK_Participant_Contest">
+            <End Role="Contest" EntitySet="Contest" />
+            <End Role="Participant" EntitySet="Participant" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Participant_User" Association="Self.FK_Participant_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Participant" EntitySet="Participant" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Problem_Contest" Association="Self.FK_Problem_Contest">
+            <End Role="Contest" EntitySet="Contest" />
+            <End Role="Problem" EntitySet="Problem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Problem_Lang_Language" Association="Self.FK_Problem_Lang_Language">
+            <End Role="Language" EntitySet="Language" />
+            <End Role="Problem_Lang" EntitySet="Problem_Lang" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Problem_Lang_Problem" Association="Self.FK_Problem_Lang_Problem">
+            <End Role="Problem" EntitySet="Problem" />
+            <End Role="Problem_Lang" EntitySet="Problem_Lang" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Submission_Problem" Association="Self.FK_Submission_Problem">
+            <End Role="Problem" EntitySet="Problem" />
+            <End Role="Submission" EntitySet="Submission" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Submission_User" Association="Self.FK_Submission_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Submission" EntitySet="Submission" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Roles" Association="Self.FK_User_Roles">
+            <End Role="Roles" EntitySet="Roles" />
+            <End Role="User" EntitySet="User" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Project_DBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Contest">
+          <Key>
+            <PropertyRef Name="C_ID" />
+          </Key>
+          <Property Name="C_ID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Start_at" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="End_in" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Admin_ID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="Self.FK_Contest_User" FromRole="Contest" ToRole="User" />
+          <NavigationProperty Name="Problems" Relationship="Self.FK_Problem_Contest" FromRole="Contest" ToRole="Problem" />
+          <NavigationProperty Name="Users" Relationship="Self.Participant" FromRole="Contest" ToRole="User" />
+        </EntityType>
+        <EntityType Name="Input_Cases">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="Problem_ID" Type="Int32" Nullable="false" />
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Path" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Problem" Relationship="Self.FK_Input_Cases_Problem" FromRole="Input_Cases" ToRole="Problem" />
+          <NavigationProperty Name="Output_Cases" Relationship="Self.FK_Output_Cases_Input_Cases" FromRole="Input_Cases" ToRole="Output_Cases" />
+        </EntityType>
+        <EntityType Name="Language">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Problems" Relationship="Self.Problem_Lang" FromRole="Language" ToRole="Problem" />
+        </EntityType>
+        <EntityType Name="Output_Cases">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Input_ID" Type="Int32" Nullable="false" />
+          <Property Name="Path" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Input_Cases" Relationship="Self.FK_Output_Cases_Input_Cases" FromRole="Output_Cases" ToRole="Input_Cases" />
+        </EntityType>
+        <EntityType Name="Problem">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="P_Description" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Time_Limit" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="Memory_Limit" Type="Int32" Nullable="false" />
+          <Property Name="C_ID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Contest" Relationship="Self.FK_Problem_Contest" FromRole="Problem" ToRole="Contest" />
+          <NavigationProperty Name="Input_Cases" Relationship="Self.FK_Input_Cases_Problem" FromRole="Problem" ToRole="Input_Cases" />
+          <NavigationProperty Name="Submissions" Relationship="Self.FK_Submission_Problem" FromRole="Problem" ToRole="Submission" />
+          <NavigationProperty Name="Languages" Relationship="Self.Problem_Lang" FromRole="Problem" ToRole="Language" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Users" Relationship="Self.FK_User_Roles" FromRole="Roles" ToRole="User" />
+        </EntityType>
+        <EntityType Name="Submission">
+          <Key>
+            <PropertyRef Name="Problem_ID" />
+            <PropertyRef Name="User_ID" />
+          </Key>
+          <Property Name="Problem_ID" Type="Int32" Nullable="false" />
+          <Property Name="User_ID" Type="Int32" Nullable="false" />
+          <Property Name="Text_Code" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Status" Type="Byte" Nullable="false" />
+          <Property Name="Memory" Type="Int32" Nullable="false" />
+          <Property Name="Execution_Time" Type="Double" Nullable="false" />
+          <Property Name="Langage_ID" Type="Int32" Nullable="false" />
+          <Property Name="Submission_Time" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="Problem" Relationship="Self.FK_Submission_Problem" FromRole="Submission" ToRole="Problem" />
+          <NavigationProperty Name="User" Relationship="Self.FK_Submission_User" FromRole="Submission" ToRole="User" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Email" Type="String" MaxLength="64" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="64" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="R_ID" Type="Int32" Nullable="false" />
+          <Property Name="UserName" Type="String" MaxLength="64" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Contests" Relationship="Self.FK_Contest_User" FromRole="User" ToRole="Contest" />
+          <NavigationProperty Name="Role" Relationship="Self.FK_User_Roles" FromRole="User" ToRole="Roles" />
+          <NavigationProperty Name="Submissions" Relationship="Self.FK_Submission_User" FromRole="User" ToRole="Submission" />
+          <NavigationProperty Name="Contests1" Relationship="Self.Participant" FromRole="User" ToRole="Contest" />
+        </EntityType>
+        <Association Name="FK_Contest_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Contest" Type="Self.Contest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Contest">
+              <PropertyRef Name="Admin_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Problem_Contest">
+          <End Role="Contest" Type="Self.Contest" Multiplicity="1" />
+          <End Role="Problem" Type="Self.Problem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Contest">
+              <PropertyRef Name="C_ID" />
+            </Principal>
+            <Dependent Role="Problem">
+              <PropertyRef Name="C_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Input_Cases_Problem">
+          <End Role="Problem" Type="Self.Problem" Multiplicity="1" />
+          <End Role="Input_Cases" Type="Self.Input_Cases" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Problem">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Input_Cases">
+              <PropertyRef Name="Problem_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Output_Cases_Input_Cases">
+          <End Role="Input_Cases" Type="Self.Input_Cases" Multiplicity="1" />
+          <End Role="Output_Cases" Type="Self.Output_Cases" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Input_Cases">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Output_Cases">
+              <PropertyRef Name="Input_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Submission_Problem">
+          <End Role="Problem" Type="Self.Problem" Multiplicity="1" />
+          <End Role="Submission" Type="Self.Submission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Problem">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Submission">
+              <PropertyRef Name="Problem_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Roles">
+          <End Role="Roles" Type="Self.Role" Multiplicity="1" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Roles">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="R_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Submission_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Submission" Type="Self.Submission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Submission">
+              <PropertyRef Name="User_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Participant">
+          <End Role="Contest" Type="Self.Contest" Multiplicity="*" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+        </Association>
+        <Association Name="Problem_Lang">
+          <End Role="Language" Type="Self.Language" Multiplicity="*" />
+          <End Role="Problem" Type="Self.Problem" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="Project_DBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Contests" EntityType="Self.Contest" />
+          <EntitySet Name="Input_Cases" EntityType="Self.Input_Cases" />
+          <EntitySet Name="Languages" EntityType="Self.Language" />
+          <EntitySet Name="Output_Cases" EntityType="Self.Output_Cases" />
+          <EntitySet Name="Problems" EntityType="Self.Problem" />
+          <EntitySet Name="Roles" EntityType="Self.Role" />
+          <EntitySet Name="Submissions" EntityType="Self.Submission" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <AssociationSet Name="FK_Contest_User" Association="Self.FK_Contest_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Contest" EntitySet="Contests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Problem_Contest" Association="Self.FK_Problem_Contest">
+            <End Role="Contest" EntitySet="Contests" />
+            <End Role="Problem" EntitySet="Problems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Input_Cases_Problem" Association="Self.FK_Input_Cases_Problem">
+            <End Role="Problem" EntitySet="Problems" />
+            <End Role="Input_Cases" EntitySet="Input_Cases" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Output_Cases_Input_Cases" Association="Self.FK_Output_Cases_Input_Cases">
+            <End Role="Input_Cases" EntitySet="Input_Cases" />
+            <End Role="Output_Cases" EntitySet="Output_Cases" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Submission_Problem" Association="Self.FK_Submission_Problem">
+            <End Role="Problem" EntitySet="Problems" />
+            <End Role="Submission" EntitySet="Submissions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Roles" Association="Self.FK_User_Roles">
+            <End Role="Roles" EntitySet="Roles" />
+            <End Role="User" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Submission_User" Association="Self.FK_Submission_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Submission" EntitySet="Submissions" />
+          </AssociationSet>
+          <AssociationSet Name="Participant" Association="Self.Participant">
+            <End Role="Contest" EntitySet="Contests" />
+            <End Role="User" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="Problem_Lang" Association="Self.Problem_Lang">
+            <End Role="Language" EntitySet="Languages" />
+            <End Role="Problem" EntitySet="Problems" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Project_DBModelStoreContainer" CdmEntityContainer="Project_DBEntities">
+          <EntitySetMapping Name="Contests">
+            <EntityTypeMapping TypeName="Project_DBModel.Contest">
+              <MappingFragment StoreEntitySet="Contest">
+                <ScalarProperty Name="C_ID" ColumnName="C_ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Start_at" ColumnName="Start_at" />
+                <ScalarProperty Name="End_in" ColumnName="End_in" />
+                <ScalarProperty Name="Admin_ID" ColumnName="Admin_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Input_Cases">
+            <EntityTypeMapping TypeName="Project_DBModel.Input_Cases">
+              <MappingFragment StoreEntitySet="Input_Cases">
+                <ScalarProperty Name="Problem_ID" ColumnName="Problem_ID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Path" ColumnName="Path" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Languages">
+            <EntityTypeMapping TypeName="Project_DBModel.Language">
+              <MappingFragment StoreEntitySet="Language">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Output_Cases">
+            <EntityTypeMapping TypeName="Project_DBModel.Output_Cases">
+              <MappingFragment StoreEntitySet="Output_Cases">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Input_ID" ColumnName="Input_ID" />
+                <ScalarProperty Name="Path" ColumnName="Path" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Problems">
+            <EntityTypeMapping TypeName="Project_DBModel.Problem">
+              <MappingFragment StoreEntitySet="Problem">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="P_Description" ColumnName="P_Description" />
+                <ScalarProperty Name="Time_Limit" ColumnName="Time_Limit" />
+                <ScalarProperty Name="Memory_Limit" ColumnName="Memory_Limit" />
+                <ScalarProperty Name="C_ID" ColumnName="C_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="Project_DBModel.Role">
+              <MappingFragment StoreEntitySet="Roles">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Submissions">
+            <EntityTypeMapping TypeName="Project_DBModel.Submission">
+              <MappingFragment StoreEntitySet="Submission">
+                <ScalarProperty Name="Problem_ID" ColumnName="Problem_ID" />
+                <ScalarProperty Name="User_ID" ColumnName="User_ID" />
+                <ScalarProperty Name="Text_Code" ColumnName="Text_Code" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Memory" ColumnName="Memory" />
+                <ScalarProperty Name="Execution_Time" ColumnName="Execution_Time" />
+                <ScalarProperty Name="Langage_ID" ColumnName="Langage_ID" />
+                <ScalarProperty Name="Submission_Time" ColumnName="Submission_Time" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="Project_DBModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="R_ID" ColumnName="R_ID" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="Participant" TypeName="Project_DBModel.Participant" StoreEntitySet="Participant">
+            <EndProperty Name="Contest">
+              <ScalarProperty Name="C_ID" ColumnName="C_ID" />
+            </EndProperty>
+            <EndProperty Name="User">
+              <ScalarProperty Name="id" ColumnName="User_ID" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="Problem_Lang" TypeName="Project_DBModel.Problem_Lang" StoreEntitySet="Problem_Lang">
+            <EndProperty Name="Language">
+              <ScalarProperty Name="ID" ColumnName="Lang_ID" />
+            </EndProperty>
+            <EndProperty Name="Problem">
+              <ScalarProperty Name="ID" ColumnName="Problem_ID" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
